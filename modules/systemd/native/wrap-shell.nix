@@ -1,4 +1,11 @@
-{ config, lib, utils, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  utils,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 with lib;
 
@@ -8,8 +15,10 @@ let
   users-groups-module = import "${modulesPath}/config/users-groups.nix" {
     inherit lib utils pkgs;
     config = recursiveUpdate config {
-      users.users = mapAttrs
-        (n: v: v // {
+      users.users = mapAttrs (
+        n: v:
+        v
+        // {
           shell =
             let
               shellPath = utils.toShellPath v.shell;
@@ -23,8 +32,8 @@ let
               };
             in
             wrapper.outPath + "/wrapper";
-        })
-        config.users.users;
+        }
+      ) config.users.users;
     };
   };
 in

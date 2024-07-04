@@ -1,4 +1,10 @@
-{ lib, pkgs, options, config, ... }:
+{
+  lib,
+  pkgs,
+  options,
+  config,
+  ...
+}:
 with lib;
 {
 
@@ -22,7 +28,10 @@ with lib;
         };
         systemd = mkOption {
           internal = true;
-          type = enum [ "native" "syschdemd" ];
+          type = enum [
+            "native"
+            "syschdemd"
+          ];
           description = "the systemd implementation used by NixOS-WSL";
           default = if config.wsl.nativeSystemd then "native" else "syschdemd";
         };
@@ -36,7 +45,13 @@ with lib;
         with config.wsl.version;
         let
           opts = options.wsl.version;
-          maxlen = foldl (acc: opt: max acc (stringLength opt)) 0 ((attrNames opts) ++ [ "help" "json" ]);
+          maxlen = foldl (acc: opt: max acc (stringLength opt)) 0 (
+            (attrNames opts)
+            ++ [
+              "help"
+              "json"
+            ]
+          );
           rightPad = text: "${text}${fixedWidthString (2 + maxlen - (stringLength text)) " " ""}";
         in
         pkgs.writeShellScriptBin "nixos-wsl-version" ''
@@ -46,24 +61,30 @@ with lib;
                 echo "Usage: nixos-wsl-version [option]"
                 echo "Options:"
                 echo -e "  --${rightPad "help"}Show this help message"
-                ${concatStringsSep "\n" (
-                  mapAttrsToList (option: value: ''
-                    echo "  --${rightPad option}Show ${value.description}"
-                  '') opts
-                )}
+                ${
+                  concatStringsSep "\n" (
+                    mapAttrsToList (option: value: ''
+                      echo "  --${rightPad option}Show ${value.description}"
+                    '') opts
+                  )
+                }
                 echo -e "  --${rightPad "json"}Show everything in JSON format"
                 exit 0
                 ;;
-              ${concatStringsSep "\n" (
-                mapAttrsToList (option: value: ''
-                  --${option})
-                  echo ${value}
-                  exit 0
-                  ;;
-                '') config.wsl.version
-              )}
+              ${
+                concatStringsSep "\n" (
+                  mapAttrsToList (option: value: ''
+                    --${option})
+                    echo ${value}
+                    exit 0
+                    ;;
+                  '') config.wsl.version
+                )
+              }
               --json)
-                echo '${generators.toJSON {} config.wsl.version}' | ${pkgs.jq}/bin/jq -M # Use jq to pretty-print the JSON
+                echo '${
+                  generators.toJSON { } config.wsl.version
+                }' | ${pkgs.jq}/bin/jq -M # Use jq to pretty-print the JSON
                 exit 0
                 ;;
               *)

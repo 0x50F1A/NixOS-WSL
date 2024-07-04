@@ -1,20 +1,19 @@
-{ stdenv
-, lib
-, path
-, system
-, runCommand
-, mdbook
-, gnused
-, nixosOptionsDoc
+{
+  stdenv,
+  lib,
+  path,
+  system,
+  runCommand,
+  mdbook,
+  gnused,
+  nixosOptionsDoc,
 }:
 
 with lib;
 let
   eval = import (path + "/nixos/lib/eval-config.nix") {
     inherit system;
-    modules = [
-      ../modules
-    ];
+    modules = [ ../modules ];
   };
 in
 stdenv.mkDerivation rec {
@@ -38,9 +37,7 @@ stdenv.mkDerivation rec {
   '';
 
   passthru = {
-    optionsDoc = nixosOptionsDoc {
-      options = eval.options.wsl;
-    };
+    optionsDoc = nixosOptionsDoc { options = eval.options.wsl; };
     optionsMD = runCommand "options.md" { } ''
       set -euo pipefail
       cat ${passthru.optionsDoc.optionsCommonMark} \

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   usbipd-win-auto-attach = pkgs.fetchurl {
@@ -31,9 +36,7 @@ in
   };
 
   config = lib.mkIf (config.wsl.enable && cfg.enable) {
-    environment.systemPackages = [
-      pkgs.linuxPackages.usbip
-    ];
+    environment.systemPackages = [ pkgs.linuxPackages.usbip ];
 
     services.udev.enable = true;
 

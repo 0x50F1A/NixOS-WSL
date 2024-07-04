@@ -1,5 +1,11 @@
-{ config, pkgs, lib, ... }:
-with builtins; with lib;
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with builtins;
+with lib;
 let
   cfg = config.wsl.tarball;
 
@@ -81,13 +87,18 @@ in
         nixos-enter --root "$root" --command 'HOME=/root nix-channel --add https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz nixos-wsl'
 
         echo "[NixOS-WSL] Adding default config..."
-        ${if cfg.configPath == null then ''
-          install -Dm644 ${defaultConfig} "$root/etc/nixos/configuration.nix"
-        '' else ''
-          mkdir -p "$root/etc/nixos"
-          cp -R ${lib.cleanSource cfg.configPath}/. "$root/etc/nixos"
-          chmod -R u+w "$root/etc/nixos"
-        ''}
+        ${
+          if cfg.configPath == null then
+            ''
+              install -Dm644 ${defaultConfig} "$root/etc/nixos/configuration.nix"
+            ''
+          else
+            ''
+              mkdir -p "$root/etc/nixos"
+              cp -R ${lib.cleanSource cfg.configPath}/. "$root/etc/nixos"
+              chmod -R u+w "$root/etc/nixos"
+            ''
+        }
 
         echo "[NixOS-WSL] Compressing..."
         tar -C "$root" \

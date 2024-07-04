@@ -1,8 +1,24 @@
-{ config, lib, pkgs, ... }:
-with builtins; with lib; {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with builtins;
+with lib;
+{
 
   imports = [
-    (mkRenamedOptionModule [ "wsl" "docker" ] [ "wsl" "docker-desktop" ])
+    (mkRenamedOptionModule
+      [
+        "wsl"
+        "docker"
+      ]
+      [
+        "wsl"
+        "docker-desktop"
+      ]
+    )
   ];
 
   options.wsl.docker-desktop = with types; {
@@ -32,9 +48,7 @@ with builtins; with lib; {
         };
       };
 
-      users.groups.docker.members = [
-        config.wsl.defaultUser
-      ];
+      users.groups.docker.members = [ config.wsl.defaultUser ];
 
     };
 

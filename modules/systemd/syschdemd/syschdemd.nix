@@ -1,24 +1,26 @@
-{ runCommand
-, makeWrapper
-, lib
-, coreutils
-, daemonize
-, getent
-, gnugrep
-, systemd
-, util-linux
-, which
-, defaultUser
-, automountPath
-, ...
+{
+  runCommand,
+  makeWrapper,
+  lib,
+  coreutils,
+  daemonize,
+  getent,
+  gnugrep,
+  systemd,
+  util-linux,
+  which,
+  defaultUser,
+  automountPath,
+  ...
 }:
 let
   mkWrappedScript =
-    { name
-    , src
-    , path
-    , ...
-    } @ args:
+    {
+      name,
+      src,
+      path,
+      ...
+    }@args:
     runCommand name ({ nativeBuildInputs = [ makeWrapper ]; } // args) ''
       install -Dm755 ${src} $out/bin/${name}
       patchShebangs $out/bin/${name}

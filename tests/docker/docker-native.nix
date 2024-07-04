@@ -1,7 +1,5 @@
 {
-  imports = [
-    <nixos-wsl/modules>
-  ];
+  imports = [ <nixos-wsl/modules> ];
 
   wsl.enable = true;
 

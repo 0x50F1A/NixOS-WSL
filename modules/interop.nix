@@ -1,6 +1,7 @@
 { lib, config, ... }:
 
-with builtins; with lib;
+with builtins;
+with lib;
 {
   options.wsl.interop = with types; {
     register = mkOption {
@@ -36,8 +37,9 @@ with builtins; with lib;
         let
           registrations = config.boot.binfmt.registrations;
         in
-        optional (!(registrations ? WSLInterop) && (length (attrNames config.boot.binfmt.registrations)) != 0) "Having any binfmt registrations without re-registering WSLInterop (wsl.interop.register) will break running .exe files from WSL2";
+        optional
+          (!(registrations ? WSLInterop) && (length (attrNames config.boot.binfmt.registrations)) != 0)
+          "Having any binfmt registrations without re-registering WSLInterop (wsl.interop.register) will break running .exe files from WSL2";
     };
-
 
 }

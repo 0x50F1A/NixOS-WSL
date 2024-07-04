@@ -10,15 +10,17 @@ in
 
   wsl.enable = true;
 
-  home-manager.users.nixos = { ... }: {
-    home = {
-      stateVersion = ver;
-      packages = [ pkgs.vim ];
-      sessionVariables = {
-        EDITOR = "vim";
-        TEST_VARIABLE = "THISISATESTSTRING";
+  home-manager.users.nixos =
+    { ... }:
+    {
+      home = {
+        stateVersion = ver;
+        packages = [ pkgs.vim ];
+        sessionVariables = {
+          EDITOR = "vim";
+          TEST_VARIABLE = "THISISATESTSTRING";
+        };
       };
+      programs.bash.enable = true;
     };
-    programs.bash.enable = true;
-  };
 }

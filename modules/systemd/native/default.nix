@@ -1,16 +1,25 @@
-{ config, pkgs, lib, ... }:
-with lib; {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with lib;
+{
 
-  imports = [
-    ./wrap-shell.nix
-  ];
+  imports = [ ./wrap-shell.nix ];
 
   config =
     let
       cfg = config.wsl;
 
       bashWrapper = pkgs.writeShellScriptBin "sh" ''
-        export PATH="$PATH:${lib.makeBinPath [ pkgs.systemd pkgs.gnugrep ]}"
+        export PATH="$PATH:${
+          lib.makeBinPath [
+            pkgs.systemd
+            pkgs.gnugrep
+          ]
+        }"
         exec ${pkgs.bashInteractive}/bin/sh "$@"
       '';
     in
@@ -32,11 +41,13 @@ with lib; {
           mkdir -p /sbin
           ln -sf ${config.system.build.nativeUtils}/bin/systemd-shim /sbin/init
         '';
-        setupLogin = lib.mkIf cfg.populateBin (stringAfter [ ] ''
-          echo "setting up /bin/login..."
-          mkdir -p /bin
-          ln -sf ${pkgs.shadow}/bin/login /bin/login
-        '');
+        setupLogin = lib.mkIf cfg.populateBin (
+          stringAfter [ ] ''
+            echo "setting up /bin/login..."
+            mkdir -p /bin
+            ln -sf ${pkgs.shadow}/bin/login /bin/login
+          ''
+        );
       };
 
       environment = {
